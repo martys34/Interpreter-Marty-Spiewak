@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/martyspiewak/CLionProjects/Interpreter/firsts.h
+
+/Users/martyspiewak/CLionProjects/Interpreter/interpreter.c
+parser.c
+/Users/martyspiewak/CLionProjects/Interpreter/parser.c
+variables.h
+/Users/martyspiewak/CLionProjects/Interpreter/variables.h
+
+/Users/martyspiewak/CLionProjects/Interpreter/parser.c
+tokenizer.c
+/Users/martyspiewak/CLionProjects/Interpreter/tokenizer.c
+firsts.h
+/Users/martyspiewak/CLionProjects/Interpreter/firsts.h
+
+/Users/martyspiewak/CLionProjects/Interpreter/structures.h
+stdlib.h
+-
+string.h
+-
+
+/Users/martyspiewak/CLionProjects/Interpreter/tokenizer.c
+stdio.h
+-
+stdlib.h
+-
+ctype.h
+-
+structures.h
+/Users/martyspiewak/CLionProjects/Interpreter/structures.h
+
+/Users/martyspiewak/CLionProjects/Interpreter/variables.h
+stdlib.h
+-
+
