@@ -53,7 +53,7 @@ char* varToString(Variable* v) {
         sprintf(string, "%s %d",string, v->value.num);
     }
     else {
-        strcat(string, v->value.c);
+        sprintf(string, "%s %c",string, v->value.c);
     }
     strcat(string, ".\n");
 

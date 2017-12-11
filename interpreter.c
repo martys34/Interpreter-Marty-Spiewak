@@ -7,17 +7,17 @@ void exStatement(Node* root);
 void exCin(Node* cin);
 void exCout(Node* cout);
 void exLOfExp(Node* lOfExp);
-int exExp(Node* exp);
-int exLogAnd(Node* logAnd);
-int exBor(Node* bor);
-int exBand(Node* band);
-int exBop(Node* bop);
-int exComp(Node* comp);
-int exAdd(Node* add);
-int exMult(Node* mult);
-int exUop(Node* uop);
-int exPrim(Node* prim);
-int exVar(Node* var);
+int exExp(Node* exp, _Bool print);
+int exLogAnd(Node* logAnd, _Bool print);
+int exBor(Node* bor, _Bool print);
+int exBand(Node* band, _Bool print);
+int exBop(Node* bop, _Bool print);
+int exComp(Node* comp, _Bool print);
+int exAdd(Node* add, _Bool print);
+int exMult(Node* mult, _Bool print);
+int exUop(Node* uop, _Bool print);
+int exPrim(Node* prim, _Bool print);
+int exVar(Node* var, _Bool print);
 void exIf(Node* ifNode);
 void exWhile(Node* whileNode);
 void exAssign(Node* assign);
@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 
 void interpret(Node* root) {
     Node* node = root->first_child;
-    printf("%s", nodeToString(node));
+    //printf("%s", nodeToString(node));
     while(strcmp(node->data.rule, "listofstatements") != 0) {
         node = node->next_sib;
         if(node == NULL) {
@@ -53,7 +53,7 @@ void interpret(Node* root) {
             return;
         }
     }
-    printf("%s", nodeToString(node));
+    //printf("%s", nodeToString(node));
     exLOfStatements(node);
 
 }
@@ -155,94 +155,109 @@ void exLOfExp(Node* lOfExp) {
     Node* current = lOfExp->first_child;
     _Bool moreExps = 1;
     while(moreExps) {
-        int toPrint = exExp(current);
+        exExp(current, 1);
+        //int toPrint = exExp(current);
+
+        //printf("%d\n", toPrint);
+
         if(current->next_sib == NULL) {
             moreExps = 0;
         }
         else {
             current = current->next_sib->next_sib;
         }
-        printf("%d\n", toPrint);
     }
 }
 
-int exExp(Node* exp) {
+int exExp(Node* exp, _Bool print) {
     //get to logand
     Node* current = exp->first_child;
     int result;
     if(current->next_sib != NULL) {
-        int result1 = exLogAnd(current);
-        int result2 = exLogAnd(current->next_sib->next_sib);
+        int result1 = exLogAnd(current, 0);
+        int result2 = exLogAnd(current->next_sib->next_sib, 0);
         if(result1 != 0 || result2 != 0) {
             result = 1;
         }
         else {
             result = 0;
         }
+        if(print) {
+            printf("%d\n", result);
+        }
     }
     else {
-        result = exLogAnd(current);
+        result = exLogAnd(current, print);
     }
     return result;
 }
 
-int exLogAnd(Node* logAnd) {
+int exLogAnd(Node* logAnd, _Bool print) {
     //get to bor
     Node* current = logAnd->first_child;
     int result;
     if(current->next_sib != NULL) {
-        int result1 = exBor(current);
-        int result2 = exBor(current->next_sib->next_sib);
+        int result1 = exBor(current, 0);
+        int result2 = exBor(current->next_sib->next_sib, 0);
         if(result1 != 0 && result2 != 0) {
             result = 1;
         }
         else {
             result = 0;
         }
+        if(print) {
+            printf("%d\n", result);
+        }
     }
     else {
-        result = exBor(current);
+        result = exBor(current, print);
     }
     return result;
 }
 
-int exBor(Node* bor) {
+int exBor(Node* bor, _Bool print) {
     //get to band
     Node* current = bor->first_child;
     int result;
     if(current->next_sib != NULL) {
-        int result1 = exBand(current);
-        int result2 = exBand(current->next_sib->next_sib);
+        int result1 = exBand(current, 0);
+        int result2 = exBand(current->next_sib->next_sib, 0);
         result = (result1 | result2);
+        if(print) {
+            printf("%d\n", result);
+        }
     }
     else {
-        result = exBand(current);
+        result = exBand(current, print);
     }
     return result;
 }
 
-int exBand(Node* band) {
+int exBand(Node* band, _Bool print) {
     //get to bop
     Node* current = band->first_child;
     int result;
     if(current->next_sib != NULL) {
-        int result1 = exBop(current);
-        int result2 = exBop(current->next_sib->next_sib);
+        int result1 = exBop(current, 0);
+        int result2 = exBop(current->next_sib->next_sib, 0);
         result = (result1 & result2);
+        if(print) {
+            printf("%d\n", result);
+        }
     }
     else {
-        result = exBop(current);
+        result = exBop(current, print);
     }
     return result;
 }
 
-int exBop(Node* bop) {
+int exBop(Node* bop, _Bool print) {
     //get to comp
     Node* current = bop->first_child;
     int result;
     if(current->next_sib != NULL) {
-        int result1 = exComp(current);
-        int result2 = exComp(current->next_sib->next_sib);
+        int result1 = exComp(current, 0);
+        int result2 = exComp(current->next_sib->next_sib, 0);
         if(current->next_sib->data.token->type == NOT_EQUAL) {
             if(result1 != result2) {
                 result = 1;
@@ -259,20 +274,23 @@ int exBop(Node* bop) {
                 result = 0;
             }
         }
+        if(print) {
+            printf("%d\n", result);
+        }
     }
     else {
-        result = exComp(current);
+        result = exComp(current, print);
     }
     return result;
 }
 
-int exComp(Node* comp) {
+int exComp(Node* comp, _Bool print) {
     //get to add
     Node* current = comp->first_child;
     int result = -1;
     if(current->next_sib != NULL) {
-        int result1 = exAdd(current);
-        int result2 = exAdd(current->next_sib->next_sib);
+        int result1 = exAdd(current, 0);
+        int result2 = exAdd(current->next_sib->next_sib, 0);
         if(current->next_sib->data.token->type == GREATER_THAN) {
             if(result1 > result2) {
                 result = 1;
@@ -305,20 +323,23 @@ int exComp(Node* comp) {
                 result = 0;
             }
         }
+        if(print) {
+            printf("%d\n", result);
+        }
     }
     else {
-        result = exAdd(current);
+        result = exAdd(current, print);
     }
     return result;
 }
 
-int exAdd(Node* add) {
+int exAdd(Node* add, _Bool print) {
     //get to mult
     Node* current = add->first_child;
     int result;
     if(current->next_sib != NULL) {
-        int result1 = exMult(current);
-        int result2 = exMult(current->next_sib->next_sib);
+        int result1 = exMult(current, 0);
+        int result2 = exMult(current->next_sib->next_sib, 0);
         if(current->next_sib->data.token->type == SUB_OP) {
             result = result1 - result2;
         }
@@ -327,7 +348,7 @@ int exAdd(Node* add) {
         }
         current = current->next_sib->next_sib;
         while(current->next_sib != NULL) {
-            int resultx = exMult(current->next_sib->next_sib);
+            int resultx = exMult(current->next_sib->next_sib, 0);
             if(current->next_sib->data.token->type == SUB_OP) {
                 result = result - resultx;
             }
@@ -336,20 +357,23 @@ int exAdd(Node* add) {
             }
             current = current->next_sib->next_sib;
         }
+        if(print) {
+            printf("%d\n", result);
+        }
     }
     else {
-        result = exMult(current);
+        result = exMult(current, print);
     }
     return result;
 }
 
-int exMult(Node* mult) {
+int exMult(Node* mult, _Bool print) {
     //get to uop
     Node* current = mult->first_child;
     int result;
     if(current->next_sib != NULL) {
-        int result1 = exUop(current);
-        int result2 = exUop(current->next_sib->next_sib);
+        int result1 = exUop(current, 0);
+        int result2 = exUop(current->next_sib->next_sib, 0);
         if(current->next_sib->data.token->type == DIV_OP) {
             result = result1 / result2;
         }
@@ -359,22 +383,25 @@ int exMult(Node* mult) {
         else {
             result = result1 % result2;
         }
+        if(print) {
+            printf("%d\n", result);
+        }
     }
     else {
-        result = exUop(current);
+        result = exUop(current, print);
     }
     return result;
 }
 
-int exUop(Node* uop) {
+int exUop(Node* uop, _Bool print) {
     //get to next
     Node* current = uop->first_child;
     int result = -1;
     if(strcmp(current->data.rule, "prim") == 0) {
-        result = exPrim(current);
+        result = exPrim(current, print);
     }
     else {
-        int result1 = exUop(current->next_sib);
+        int result1 = exUop(current->next_sib, 0);
         if(current->data.token->type == LOG_NOT) {
             result = !result1;
         }
@@ -384,32 +411,44 @@ int exUop(Node* uop) {
         else if(current->data.token->type == BIT_NOT) {
             result = (~result1);
         }
+        if(print) {
+            printf("%d\n", result);
+        }
     }
     return result;
 }
 
-int exPrim(Node* prim) {
+int exPrim(Node* prim, _Bool print) {
     //get to next
     Node* current = prim->first_child;
     int result;
     if(current->data.token->type == INT) {
         int a = atoi(current->data.token->lexeme);
         result = a;
+        if(print) {
+            printf("%d\n", result);
+        }
     }
     else if(current->data.token->type == CHAR) {
-        char c = current->data.token->lexeme[0];
+        char c = current->data.token->lexeme[1];
         result = c;
+        if(print) {
+            printf("%d\n", result);
+        }
     }
     else if(current->data.token->type == OPEN_PARENT) {
-        result = exExp(current->next_sib);
+        result = exExp(current->next_sib, 0);
+        if(print) {
+            printf("%d\n", result);
+        }
     }
     else {
-        result = exVar(current);
+        result = exVar(current, print);
     }
     return result;
 }
 
-int exVar(Node* var) {
+int exVar(Node* var, _Bool print) {
     //get to IDENT
     Node* current = var->first_child;
     int result = -1;
@@ -434,9 +473,15 @@ int exVar(Node* var) {
     else {
         if(numOrChar == 1) {
             result = variable->value.num;
+            if(print) {
+                printf("%d\n", result);
+            }
         }
         else {
             result = variable->value.c;
+            if(print) {
+                printf("%c\n", result);
+            }
         }
     }
     return result;
@@ -445,7 +490,7 @@ int exVar(Node* var) {
 void exIf(Node* ifNode) {
     //get to exp
     Node* current = ifNode->first_child->next_sib->next_sib;
-    int expResult = exExp(current);
+    int expResult = exExp(current, 0);
     if(expResult == 0) {
         //get to else if there
         current = current->next_sib->next_sib->next_sib;
@@ -468,7 +513,7 @@ void exIf(Node* ifNode) {
 void exWhile(Node* whileNode) {
     //get to exp
     Node* current = whileNode->first_child->next_sib->next_sib;
-    int expResult = exExp(current);
+    int expResult = exExp(current, 0);
     if(expResult == 0) {
         return;
     }
@@ -484,7 +529,7 @@ void exAssign(Node* assign) {
     Node* lOfVar2 = assign->first_child;
     //get to exp
     Node* exp = lOfVar2->next_sib->next_sib;
-    int expResult = exExp(exp);
+    int expResult = exExp(exp, 0);
     //gets to variable
     Node* var = lOfVar2->first_child;
     _Bool moreVars = 1;
@@ -509,12 +554,12 @@ void exAssign(Node* assign) {
         else {
             var = var->next_sib->next_sib;
         }
-        //printf("%s", varToString(varTable[index]));
     }
 }
 
 void printVarTable() {
     int i = 0;
+    printf("%s\n", "Program completed. Stored variables:");
     while(varTable[i] != NULL) {
         printf("%s", varToString(varTable[i++]));
     }

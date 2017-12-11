@@ -42,7 +42,7 @@ Node* parse(char* path) {
 
     root = createSNode("program");
     program();
-    printTree(root);
+    //printTree(root);
 
     return root;
 }
