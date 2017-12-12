@@ -42,7 +42,7 @@ Node* parse(char* path) {
 
     root = createSNode("program");
     program();
-    //printTree(root);
+    printTree(root);
 
     return root;
 }
@@ -146,6 +146,7 @@ void variable(Node* prev) {
 void statement(Node* prev) {
     Node* n = createSNode("statement");
     setChild(prev, n);
+    printf("%s\n", tokenToString(nextT));
     if(nextT->type == OPEN_BRACE) {
         Node* t = createTkNode(nextT);
         setChild(n, t);
@@ -416,6 +417,7 @@ void ifMeth(Node* prev) {
     exp(n);
     Node* clPar = createTkNode(nextT);
     setChild(n, clPar);
+    next();
     statement(n);
     if(nextT->type == ELSE) {
         Node* elNod = createTkNode(nextT);
