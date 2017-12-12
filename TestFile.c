@@ -1,7 +1,17 @@
-char c;
+int x,y,z;
 
-c = 'z';
+int d;
 
-if(c == 'z') {
-    cout<<c;
+cin>>x>>y;
+
+z=x+2*y-7;
+
+d=z/(x+2*x);
+
+cout<<x<<y<<y+3*z<<d-(x-2);
+while(y>0){
+z=x % y;
+x=y;
+y=z;
 }
+cout<<x;
